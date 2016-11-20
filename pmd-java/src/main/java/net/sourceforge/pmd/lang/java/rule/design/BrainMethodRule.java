@@ -1,10 +1,8 @@
 package net.sourceforge.pmd.lang.java.rule.design;
 
-import net.sourceforge.pmd.RuleContext;
 import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.java.ast.*;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
-import net.sourceforge.pmd.lang.java.rule.JavaRuleViolation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +32,7 @@ public class BrainMethodRule extends AbstractJavaRule {
 
     @Override
     public Object visit(ASTCompilationUnit node, Object data) {
-
+        System.out.println("initializing BrainMethodRule ");
         init();
         return super.visit(node, data);
 
@@ -63,8 +61,7 @@ public class BrainMethodRule extends AbstractJavaRule {
         CYCLO = calculateCYCLO(node);
 
         if ((LOC > LOC_THRESHOLD) && (CYCLO > CYCLO_THRESHOLD) && checkMAXNESTING(node) && (NOAV > NOAV_THRESHOLD)) {
-            RuleContext ctx = (RuleContext) data;
-            ctx.getReport().addRuleViolation(new JavaRuleViolation(this, ctx, node, "Method Name=" + node.getName()));
+            addViolation(data, node);
         }
         return super.visit(node, data);
     }
